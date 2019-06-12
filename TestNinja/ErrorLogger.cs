@@ -20,6 +20,11 @@ namespace TestNinja
             // Write to storage
             // ...
 
+            OnErrorLogged(Guid.NewGuid());
+        }
+
+        protected virtual void OnErrorLogged(Guid errorId)
+        {
             ErrorLogged?.Invoke(this, Guid.NewGuid());
         }
     }

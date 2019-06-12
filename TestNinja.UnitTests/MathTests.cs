@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using TestNinja;
 
 namespace TestNinja.UnitTests
@@ -36,6 +37,13 @@ namespace TestNinja.UnitTests
             var actual = _math.Max(a, b);
 
             Assert.That(actual, Is.EqualTo(expected));
+        }
+
+        [Test]
+        [Ignore("TODO, Broken")]
+        public void BrokenTest()
+        {
+            throw new NotImplementedException();
         }
     }
 }

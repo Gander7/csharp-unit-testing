@@ -16,7 +16,9 @@ namespace TestNinja
         }
         public IEnumerable<int> GetOddNumbers(int limit)
         {
-            throw new NotImplementedException();
+            for (var i = 0; i <= limit; i++)
+                if (i % 2 != 0)
+                    yield return i;
         }
     }
 }

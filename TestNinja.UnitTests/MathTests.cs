@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using System;
+using System.Linq;
 using TestNinja;
 
 namespace TestNinja.UnitTests
@@ -44,6 +45,26 @@ namespace TestNinja.UnitTests
         public void BrokenTest()
         {
             throw new NotImplementedException();
+        }
+
+        [Test]
+        public void GetOddNumbers_LimitIsPositive_ReturnOddNumbersUpToLimit()
+        {
+            var actual = _math.GetOddNumbers(5);
+
+            //Assert.That(actual, Is.Not.Empty);
+            // or
+            //Assert.That(actual.Count(), Is.EqualTo(3));
+            // or
+            //Assert.That(actual, Does.Contain(1));
+            //Assert.That(actual, Does.Contain(3));
+            //Assert.That(actual, Does.Contain(5));
+            // or
+            Assert.That(actual, Is.EquivalentTo(new[] { 1, 3, 5 })); // does not care about order
+
+            // Other, Useful but not needed for this test
+            Assert.That(actual, Is.Ordered);
+            Assert.That(actual, Is.Unique);
         }
     }
 }

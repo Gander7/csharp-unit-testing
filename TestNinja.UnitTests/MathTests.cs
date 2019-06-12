@@ -6,44 +6,36 @@ namespace TestNinja.UnitTests
     [TestFixture]
     class MathTests
     {
+        private Math _math;
+
+        [SetUp]
+        // Setup, triggers before each test
+        public void SetUp()
+        {
+            _math = new Math();
+        }
+
+        // Teardown
+        // triggers after each test. Often used with integration tests to keep data clean.
+
+
         [Test]
         public void Add_WhenCalled_ReturnTheSumOfArguments()
         {
-            var math = new Math();
-
-            var actual = math.Add(1, 2);
+            var actual = _math.Add(1, 2);
 
             Assert.That(actual, Is.EqualTo(3));
         }
 
         [Test]
-        public void Max_FirstArgIsGreater_ReturnTheFirstArgument()
+        [TestCase(1, 2, 2)]
+        [TestCase(2, 1, 2)]
+        [TestCase(2, 2, 2)]
+        public void Max_WhenCalled_ReturnTheGreaterArgument(int a, int b, int expected)
         {
-            var math = new Math();
+            var actual = _math.Max(a, b);
 
-            var actual = math.Max(2, 1);
-
-            Assert.That(actual, Is.EqualTo(2));
-        }
-
-        [Test]
-        public void Max_SecondArgIsGreater_ReturnTheSecondArgument()
-        {
-            var math = new Math();
-
-            var actual = math.Max(1, 2);
-
-            Assert.That(actual, Is.EqualTo(2));
-        }
-
-        [Test]
-        public void Max_ArgsAreEqual_ReturntheSameArgument()
-        {
-            var math = new Math();
-
-            var actual = math.Max(2, );
-
-            Assert.That(actual, Is.EqualTo(2));
+            Assert.That(actual, Is.EqualTo(expected));
         }
     }
 }

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TestNinja.UnitTests
+namespace TestNinja.UnitTests.Fundamentals
 {
     [TestFixture]
     class CustomerControllerTests

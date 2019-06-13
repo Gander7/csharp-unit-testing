@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace TestNinja.UnitTests
+namespace TestNinja.UnitTests.Fundamentals
 {
     [TestFixture]
     public class ReservationTests

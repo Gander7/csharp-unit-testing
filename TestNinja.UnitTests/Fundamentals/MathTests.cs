@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using TestNinja;
 
-namespace TestNinja.UnitTests
+namespace TestNinja.UnitTests.Fundamentals
 {
     [TestFixture]
     class MathTests

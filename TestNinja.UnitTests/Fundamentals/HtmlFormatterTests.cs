@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using TestNinja;
 
-namespace TestNinja.UnitTests
+namespace TestNinja.UnitTests.Fundamentals
 {
     [TestFixture]
     class HtmlFormatterTests

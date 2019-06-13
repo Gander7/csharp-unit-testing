@@ -8,9 +8,40 @@ namespace TestNinja.Mocking
 {
     public class VideoService
     {
+        // DI via Method Property //////////////////////////////////////
         public string ReadVideoTitle(IFileReader fileReader)
         {
             var str = fileReader.Read("video.txt");
+            var video = JsonConvert.DeserializeObject<Video>(str);
+            if (video == null)
+                return "Error parsing the video";
+            return video.Title;
+        }
+
+        // DI via Class Property //////////////////////////////////////
+        public IFileReader FileReader2 { get; set; }
+        public VideoService()
+        {
+            FileReader2 = new FileReader();
+        }
+        public string ReadVideoTitle2()
+        {
+            var str = FileReader2.Read("video.txt");
+            var video = JsonConvert.DeserializeObject<Video>(str);
+            if (video == null)
+                return "Error parsing the video";
+            return video.Title;
+        }
+
+        // DI via Constrcuctor //////////////////////////////////////
+        private IFileReader FileReader3 { get; set; }
+        public VideoService(IFileReader fileReader = null)
+        {
+            FileReader3 = fileReader ?? new FileReader();
+        }
+        public string ReadVideoTitle3()
+        {
+            var str = FileReader3.Read("video.txt");
             var video = JsonConvert.DeserializeObject<Video>(str);
             if (video == null)
                 return "Error parsing the video";

@@ -1,15 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace TestNinja.Mocking
 {
     public class VideoService
     {
-        // DI via Method Property //////////////////////////////////////
-        public string ReadVideoTitle(IFileReader fileReader)
+        ///////////////////////////////////////////
+        /// Example of DI via Method Property 
+        ///////////////////////////////////////////
+        public string ReadVideoTitleWithMethodProperty(IFileReader fileReader)
         {
             var str = fileReader.Read("video.txt");
             var video = JsonConvert.DeserializeObject<Video>(str);
@@ -18,52 +18,69 @@ namespace TestNinja.Mocking
             return video.Title;
         }
 
-        // DI via Class Property //////////////////////////////////////
-        public IFileReader FileReader2 { get; set; }
+
+        ///////////////////////////////////////////
+        /// Example of DI via Class Property 
+        ///////////////////////////////////////////
+        public IFileReader ClassFileReader { get; set; }
         public VideoService()
         {
-            FileReader2 = new FileReader();
+            ClassFileReader = new FileReader();
         }
-        public string ReadVideoTitle2()
+        public string ReadVideoTitleWithClassProperty()
         {
-            var str = FileReader2.Read("video.txt");
+            var str = ClassFileReader.Read("video.txt");
             var video = JsonConvert.DeserializeObject<Video>(str);
             if (video == null)
                 return "Error parsing the video";
             return video.Title;
         }
 
-        // DI via Constrcuctor //////////////////////////////////////
-        private IFileReader FileReader3 { get; set; }
+
+        ///////////////////////////////////////////
+        /// Example of DI via Constructor
+        ///////////////////////////////////////////
+        private IFileReader ConstructorFileReader { get; set; }
         public VideoService(IFileReader fileReader = null)
         {
-            FileReader3 = fileReader ?? new FileReader();
+            ConstructorFileReader = fileReader ?? new FileReader();
         }
-        public string ReadVideoTitle3()
+        public string ReadVideoTitleWithContructor()
         {
-            var str = FileReader3.Read("video.txt");
+            var str = ConstructorFileReader.Read("video.txt");
             var video = JsonConvert.DeserializeObject<Video>(str);
             if (video == null)
                 return "Error parsing the video";
             return video.Title;
+        }
+
+
+        /////////////////////////////////////////////////////////////////
+        ///// Rest of Class that wasn't duplicated for example purposes
+        /////////////////////////////////////////////////////////////////
+        private IVideoRepository _repository { get; set; }
+
+        public VideoService(IVideoRepository repository = null)
+        {
+            ConstructorFileReader = new FileReader();
+            _repository = repository ?? new VideoRepository();
+        }
+        public VideoService(IFileReader fileReader = null, IVideoRepository repository = null)
+        {
+            ConstructorFileReader = fileReader ?? new FileReader();
+            _repository = repository ?? new VideoRepository();
         }
 
         public string GetUnprocessedVideosAsCsv()
         {
             var videoIds = new List<int>();
 
-            using (var context = new VideoContext())
-            {
-                var videos =
-                    (from video in context.Videos
-                     where !video.IsProcessed
-                     select video).ToList();
+            var videos = _repository.GetUnProcessedVideos();
 
-                foreach (var v in videos)
-                    videoIds.Add(v.Id);
+            foreach (var v in videos)
+                videoIds.Add(v.Id);
 
-                return String.Join(",", videoIds);
-            }
+            return String.Join(",", videoIds);
         }
     }
 
@@ -72,10 +89,5 @@ namespace TestNinja.Mocking
         public int Id { get; set; }
         public string Title { get; set; }
         public bool IsProcessed { get; set; }
-    }
-
-    public class VideoContext : DbContext
-    {
-        public DbSet<Video> Videos { get; set; }
     }
 }

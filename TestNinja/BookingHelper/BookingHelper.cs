@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Linq;
 
-namespace TestNinja.BookingHelper
+namespace TestNinja.BookingHelp
 {
     public class BookingHelper
     {
+        public static IBookingStorage _storage { get; set; }
+
+        static BookingHelper()
+        {
+            _storage = new BookingStorage();
+        }
+
         public static string OverlappingBookingsExist(Booking booking)
         {
             if (booking.Status == "Cancelled")
                 return string.Empty;
 
-            var unitOfWork = new UnitOfWork(); // External Resource
-            var bookings =
-                unitOfWork.Query<Booking>()
-                    .Where(
-                        b => b.Id != booking.Id && 
-                        b.Status != "Cancelled");
+            var bookings = _storage.GetActiveBookings(booking.Id);
 
             var overlappingBooking =
                 bookings.FirstOrDefault(
                     b =>
-                        booking.ArrivalDate >= b.ArrivalDate
-                        && booking.ArrivalDate < b.DepartureDate
-                        || booking.DepartureDate > b.ArrivalDate
-                        && booking.DepartureDate <= b.DepartureDate);
+                        booking.ArrivalDate <= b.DepartureDate
+                        && b.ArrivalDate <= booking.DepartureDate);
 
             return overlappingBooking == null
                 ? string.Empty
@@ -31,14 +31,8 @@ namespace TestNinja.BookingHelper
         }
     }
 
-    public class UnitOfWork
-    {
-        public IQueryable<T> Query<T>()
-        {
-            return null;
-        }
-    }
-
+    // Using integers as dates for simplicity.
+    // Should be using DateTimes.
     public class Booking
     {
         public int Id { get; set; }

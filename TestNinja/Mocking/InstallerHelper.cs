@@ -5,20 +5,30 @@ namespace TestNinja.Mocking
     public class InstallerHelper
     {
         private string _setupDestinationFile;
+        private IFileDownloader _fileDownloader;
+
+        public InstallerHelper(IFileDownloader fileDownloader)
+        {
+            _fileDownloader = fileDownloader ?? new FileDownloader();
+        }
 
         public bool DownloadInstaller(string customerName, string installerName)
         {
-            var client = new WebClient();
+            const string baseURL = "http://example.com";
             try
             {
-                client.DownloadFile(
-                    string.Format("http://example.com/{0}/{1}",
+                _fileDownloader.DownloadFile(
+                    string.Format("{0}/{1}/{2}",
+                        baseURL,
                         customerName,
                         installerName),
                    _setupDestinationFile);
 
                 return true;
-            } catch (WebException e)
+            }
+            // Only catch possible expected exceptions
+            // Other exceptions should propogate into a global exception tracker
+            catch (WebException e)
             {
                 // Log stuff
                 return false;

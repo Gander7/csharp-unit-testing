@@ -28,7 +28,7 @@ namespace TestNinja.Mocking
             }
             // Only catch possible expected exceptions
             // Other exceptions should propogate into a global exception tracker
-            catch (WebException e)
+            catch (WebException)
             {
                 // Log stuff
                 return false;

@@ -2,14 +2,14 @@
 
 namespace TestNinja.Housekeeping
 {
-    public class HouseKeeperHelper
+    public class HousekeeperService
     {
         private readonly IHouseKeeperRepository _storage;
         private readonly IStatementReportGenerator _generator;
         private readonly IEmailHelper _emailHelper;
         private readonly IXtraMessageBox _messageBox;
 
-        public HouseKeeperHelper(IHouseKeeperRepository storage = null,
+        public HousekeeperService(IHouseKeeperRepository storage = null,
                                  IStatementReportGenerator generator = null, 
                                  IEmailHelper emailHelper = null,
                                  IXtraMessageBox messageBox = null)
@@ -20,13 +20,13 @@ namespace TestNinja.Housekeeping
             _messageBox = messageBox ?? new XtraMessageBox();
         }
 
-        public bool SendStatementEmails(DateTime statementDate)
+        public void SendStatementEmails(DateTime statementDate)
         {
             var housekeepers = _storage.GetHousekeepers();
 
             foreach (var housekeeper in housekeepers)
             {
-                if (housekeeper.Email == null)
+                if (String.IsNullOrWhiteSpace(housekeeper.Email))
                     continue;
 
                 var statementFilename = _generator.SaveStatement(housekeeper.Oid, housekeeper.FullName, statementDate);
@@ -48,7 +48,6 @@ namespace TestNinja.Housekeeping
                         MessageBoxButtons.OK);
                 }
             }
-            return true;
         }
     }
 
